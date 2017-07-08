@@ -5,7 +5,7 @@ const
   dataStore = DataStore('file'),
   server = net.createServer(function(connection) {
     
-    connection.on('', function() {
+    connection.on('data', function(data) {
     });
 
   });

@@ -1,12 +1,12 @@
 "use strict";
 
 exports.DataStore = function(mode) {
-  var store = null;
+  let storageInterface = null;
   if (mode === "file") {
+    storageInterface = require('fileStorageInterface');
   }
   else if (mode === "db") {
+    storageInterface = require('dbStorageInterface');
   }
-  return store;
+  return (storageInterface != null) ? storageInterface.store : null;
 }
-
-
