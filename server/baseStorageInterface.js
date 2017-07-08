@@ -8,11 +8,10 @@ function unimplimentedMethod() {
 
 function BaseStorageInterface() {
   let storageInterface = Object.create(BaseStorageInterface.prototype);
-  
   return storageInterface;
 }
 
 BaseInterStorgeface.prototype {
   requestNewMessages: unimplimentedMethod(),
-  postItem: unimplimentedMethod,
+  postMessage: unimplimentedMethod,
 }
