@@ -42,16 +42,26 @@ Conversation.prototype = {
     this.hasUpdates = false;
     let count = this.updateCount;
     this.updateCount = 0;
-    let messages_to_send = [];
+    let messages_text = [];
+    let messages = []
     fs.readFile(this.filename, function(err, data) {
       if (err) {
         throw err;
       }
       let dataString = data.toString();
-      let messages = dataString.split(/\r?\n/);
-      messages_to_send = messages.slice(-1*count);
+      let all_messages = dataString.split(/\r?\n/);
+      messages_text = messages.slice(-1*count);
     });
-    return messages_to_send;
+    for (message_text in messages_text) {
+      let sender_and_text = message_text.split(/\0/);
+      messages.append({
+        clients: this.clients,
+        sender: sender_and_text[0],
+        text: sender_and_text[1],
+        type: "DST", // To destination!
+        });
+    }
+    return messages;
   },
   // Get a full history of the messages.
   getAllMessages: function() {
@@ -76,18 +86,20 @@ function FileStorageInterface() {
 }
 
 FileStorageInterface.prototype = {
-  requestNewMessages: function(clients) {
-    let key = makeKeyFromClients(clients);
-    if (! key in this.conversations) {
-      this.conversations[key] = new Conversation(clients);
+  requestNewMessages: function() {
+    let messages = [];
+    for (var key in this.conversations) {
+      messages.concat(this.conversations[key].getUpdates());
     }
-    return this.conversations[key].getUpdates();
+    return messages;
   },
-  postMessage: function(clients, message) {
+  postMessage: function(clients, sender, message) {
     let key = makeKeyFromClients(clients);
     if (! key in this.conversations) {
       this.conversations[key] = new Conversation(clients);
     }
-    this.conversations[key].putUpdate(message);
+    this.conversations[key].putUpdate(sender+"\0"+message);
   },
 }
+
+module.exports.store = FileStorageInterface;

@@ -13,5 +13,5 @@ function BaseStorageInterface() {
 
 BaseInterStorgeface.prototype {
   requestNewMessages: unimplimentedMethod(),
-  postMessage: unimplimentedMethod,
+  postMessage: unimplimentedMethod(),
 }
